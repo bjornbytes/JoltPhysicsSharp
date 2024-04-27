@@ -1480,8 +1480,6 @@ void JPH_FixedConstraintSettings_InitDefault(JPH_FixedConstraintSettings* settin
 JPH_FixedConstraint* JPH_FixedConstraintSettings_CreateConstraint(JPH_FixedConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
     JPH_ASSERT(settings);
-    JPH_ASSERT(body1);
-    JPH_ASSERT(body2);
 
 	JPH::FixedConstraintSettings joltSettings;
 	joltSettings.mSpace = static_cast<JPH::EConstraintSpace>(settings->space);
@@ -1493,8 +1491,8 @@ JPH_FixedConstraint* JPH_FixedConstraintSettings_CreateConstraint(JPH_FixedConst
 	joltSettings.mAxisX2 = ToJolt(&settings->axisX2);
 	joltSettings.mAxisX2 = ToJolt(&settings->axisX2);
 
-    auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::FixedConstraint* constraint = static_cast<JPH::FixedConstraint*>(joltSettings.Create(*joltBody1, *joltBody2));
     constraint->AddRef();
 
@@ -1567,8 +1565,8 @@ void JPH_DistanceConstraintSettings_SetPoint2(JPH_DistanceConstraintSettings* se
 
 JPH_DistanceConstraint* JPH_DistanceConstraintSettings_CreateConstraint(JPH_DistanceConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
-    auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::DistanceConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
@@ -1675,8 +1673,8 @@ void JPH_HingeConstraintSettings_GetNormalAxis2(JPH_HingeConstraintSettings* set
 
 JPH_HingeConstraint* JPH_HingeConstraintSettings_CreateConstraint(JPH_HingeConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
-    auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::HingeConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
@@ -1976,8 +1974,8 @@ JPH_SwingTwistConstraintSettings* JPH_SwingTwistConstraintSettings_Create(void)
 
 JPH_SwingTwistConstraint* JPH_SwingTwistConstraintSettings_CreateConstraint(JPH_SwingTwistConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
-	auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::SwingTwistConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
@@ -2038,8 +2036,8 @@ JPH_SixDOFConstraintSettings* JPH_SixDOFConstraintSettings_Create(void)
 
 JPH_SixDOFConstraint* JPH_SixDOFConstraintSettings_CreateConstraint(JPH_SixDOFConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
-	auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::SixDOFConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
@@ -2091,8 +2089,8 @@ void JPH_SixDOFConstraint_GetTotalLambdaMotorRotation(const JPH_SixDOFConstraint
 
 JPH_SliderConstraint* JPH_SliderConstraintSettings_CreateConstraint(JPH_SliderConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
-    auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::SliderConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
@@ -2195,10 +2193,8 @@ void JPH_PointConstraintSettings_SetPoint2(JPH_PointConstraintSettings* settings
 JPH_PointConstraint* JPH_PointConstraintSettings_CreateConstraint(JPH_PointConstraintSettings* settings, JPH_Body* body1, JPH_Body* body2)
 {
     JPH_ASSERT(settings);
-    JPH_ASSERT(body1);
-    JPH_ASSERT(body2);
-    auto joltBody1 = reinterpret_cast<JPH::Body*>(body1);
-    auto joltBody2 = reinterpret_cast<JPH::Body*>(body2);
+    auto joltBody1 = body1 ? reinterpret_cast<JPH::Body*>(body1) : &JPH::Body::sFixedToWorld;
+    auto joltBody2 = body2 ? reinterpret_cast<JPH::Body*>(body2) : &JPH::Body::sFixedToWorld;
     JPH::TwoBodyConstraint* constraint = reinterpret_cast<JPH::PointConstraintSettings*>(settings)->Create(*joltBody1, *joltBody2);
     constraint->AddRef();
 
